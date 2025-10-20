@@ -19,7 +19,11 @@ public:
     double getPosition(double pos) const;
     double getLength() const;*/
 
+    // toggle sound file loop
+    void toggleLoop(std::unique_ptr<juce::AudioFormatReaderSource> &readersource);
 
+
+    bool isLoop;
     juce::AudioFormatManager formatManager;
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
     juce::AudioTransportSource transportSource;

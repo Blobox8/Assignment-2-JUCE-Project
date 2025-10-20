@@ -5,7 +5,7 @@
 PlayerGUI::PlayerGUI() {
 
     // Add buttons
-    for (auto* btn : { &loadButton, &restartButton , &stopButton })
+    for (auto* btn : { &loadButton, &restartButton , &stopButton, &loopButton })
     {
         btn->addListener(this);
         addAndMakeVisible(btn);
@@ -17,6 +17,8 @@ PlayerGUI::PlayerGUI() {
     volumeSlider.addListener(this);
     addAndMakeVisible(volumeSlider);
 
+    // Initialize isLoop
+    playeraudio.isLoop = false;
 }
 
 PlayerGUI::~PlayerGUI() {}
@@ -32,11 +34,11 @@ void PlayerGUI::resized()
     loadButton.setBounds(20, y, 100, 40);
     restartButton.setBounds(140, y, 80, 40);
     stopButton.setBounds(240, y, 80, 40);
-    loopButton.setBounds(30, y, 80, 40);
+    loopButton.setBounds(30, 40 + y, 80, 40);
     /*prevButton.setBounds(340, y, 80, 40);
     nextButton.setBounds(440, y, 80, 40);*/
 
-    volumeSlider.setBounds(20, 100, getWidth() - 40, 30);
+    volumeSlider.setBounds(10, 100, getWidth() - 20, 30);
 }
 
 void PlayerGUI::buttonClicked(juce::Button* button)
@@ -70,6 +72,12 @@ void PlayerGUI::buttonClicked(juce::Button* button)
     {
         playeraudio.transportSource.stop();
         playeraudio.transportSource.setPosition(0.0);
+    }
+
+    if (button == &loopButton)
+    {
+        playeraudio.isLoop = !(playeraudio.isLoop);
+        playeraudio.toggleLoop(playeraudio.readerSource);
     }
 
 }

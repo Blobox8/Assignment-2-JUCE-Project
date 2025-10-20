@@ -1,4 +1,4 @@
-﻿#include "MainComponent.h"
+#include "MainComponent.h"
 #include "PlayerAudio.h"
 #include "PlayerGUI.h"
 
