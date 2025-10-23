@@ -5,7 +5,7 @@
 PlayerGUI::PlayerGUI() {
 
     // Add buttons
-    for (auto* btn : { &loadButton, &restartButton , &stopButton, &loopButton ,&muteButton})
+    for (auto* btn : { &loadButton, &restartButton , &stopButton, &loopButton ,&muteButton, &pauseButton})
     {
         btn->addListener(this);
         addAndMakeVisible(btn);
@@ -19,8 +19,15 @@ PlayerGUI::PlayerGUI() {
     volumeSlider.addListener(this);
     addAndMakeVisible(volumeSlider);
 
-    // Initialize isLoop
+    // Initialize variables for loopButton
     playeraudio.isLoop = false;
+
+    // initialize variables for muteButton
+    playeraudio.isMuted = false;
+    playeraudio.lastGain = 0.5f;
+
+    // initialize vriables for pauseButton
+    playeraudio.isPaused = false;
 }
 
 PlayerGUI::~PlayerGUI() {}
@@ -37,6 +44,8 @@ void PlayerGUI::resized()
     restartButton.setBounds(140, y, 80, 40);
     stopButton.setBounds(240, y, 80, 40);
     loopButton.setBounds(340, y, 80, 40);
+    muteButton.setBounds(340, 80 - y, 80, 40);
+    pauseButton.setBounds(20, 80 - y, 80, 40);
     /*prevButton.setBounds(340, y, 80, 40);
     nextButton.setBounds(440, y, 80, 40);*/
 
@@ -81,7 +90,32 @@ void PlayerGUI::buttonClicked(juce::Button* button)
         playeraudio.isLoop = !(playeraudio.isLoop);
         playeraudio.toggleLoop(playeraudio.readerSource);
     }
-   
+    
+    if (button == &muteButton)
+    {
+        playeraudio.isMuted = !playeraudio.isMuted;
+        if (playeraudio.isMuted)
+        {
+            playeraudio.lastGain = playeraudio.transportSource.getGain();
+            playeraudio.transportSource.setGain(0.0f);
+            muteButton.setButtonText("Unmute");
+            muteButton.setColour(juce::TextButton::buttonColourId, juce::Colours::red);
+        }
+        else
+        {
+            playeraudio.transportSource.setGain(playeraudio.lastGain);
+            muteButton.setButtonText("Mute");
+            muteButton.setColour(juce::TextButton::buttonColourId, getLookAndFeel().findColour(juce::TextButton::buttonColourId));
+        }
+    }
+
+    if (button == &pauseButton) 
+    {
+        if (playeraudio.isPaused) playeraudio.transportSource.start();
+        else playeraudio.transportSource.stop();
+
+        playeraudio.isPaused = !playeraudio.isPaused;
+    }
     
 
 }

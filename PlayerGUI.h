@@ -24,15 +24,20 @@ public:
 private:
 	PlayerAudio playeraudio;
 
+
 	juce::TextButton loadButton{ "Load Files" };
 	juce::TextButton restartButton{ "Restart" };
 	juce::TextButton stopButton{ "Stop" };
 
 	// loop button
 	juce::TextButton loopButton{ "loop" };
+
+	// mute button
 	juce::TextButton muteButton{ "mute" };
-	bool isMuted = false;
-	float lastGain = 0.5f;
+
+	// pause/end buttons
+	juce::TextButton pauseButton{ "pause" };
+	juce::TextButton toEndButton{ "to end" };
 
 
 	juce::Slider volumeSlider;
