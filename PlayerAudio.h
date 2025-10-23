@@ -2,7 +2,7 @@
 #include <JuceHeader.h>
 
 class PlayerAudio {
-
+//hello
 public:
     PlayerAudio();
     ~PlayerAudio();
@@ -24,6 +24,8 @@ public:
 
 
     bool isLoop;
+    
+
     juce::AudioFormatManager formatManager;
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
     juce::AudioTransportSource transportSource;
