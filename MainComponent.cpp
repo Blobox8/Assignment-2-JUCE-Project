@@ -32,7 +32,7 @@ void MainComponent::releaseResources()
 }
 
 void MainComponent::resized() {
-    player1.setBounds(20, 20, getWidth() - 40, 200);
+    player1.setBounds(10, 10, getWidth() - 20, getHeight()-20);
 }
 
 
