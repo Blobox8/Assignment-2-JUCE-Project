@@ -13,11 +13,20 @@ PlayerGUI::PlayerGUI() {
 
 	muteButton.setButtonText("Mute");
 
+    //volume label
+	volumeLabel.setText("Volume", juce::dontSendNotification);
+	volumeLabel.setColour(juce::Label::textColourId, juce::Colours::whitesmoke);
+	addAndMakeVisible(volumeLabel);
+
     // Volume slider
     volumeSlider.setRange(0.0, 1.0, 0.01);
     volumeSlider.setValue(0.5);
+	volumeSlider.setSliderStyle(juce::Slider::SliderStyle::LinearBar);
+    //volumeSlider.setColour(juce::Slider::LinearBar, juce::Colours::skyblue);
     volumeSlider.addListener(this);
     addAndMakeVisible(volumeSlider);
+
+	
 
     // Initialize variables for loopButton
     playeraudio.isLoop = false;
@@ -26,7 +35,7 @@ PlayerGUI::PlayerGUI() {
     playeraudio.isMuted = false;
     playeraudio.lastGain = 0.5f;
 
-    // initialize vriables for pauseButton
+    // initialize variables for pauseButton
     playeraudio.isPaused = false;
 }
 
@@ -44,12 +53,15 @@ void PlayerGUI::resized()
     restartButton.setBounds(140, y, 80, 40);
     stopButton.setBounds(240, y, 80, 40);
     loopButton.setBounds(340, y, 80, 40);
-    muteButton.setBounds(340, 80 - y, 80, 40);
-    pauseButton.setBounds(20, 80 - y, 80, 40);
+    muteButton.setBounds(340, 90 - y, 80, 40);
+    pauseButton.setBounds(20, 90 - y, 80, 40);
     /*prevButton.setBounds(340, y, 80, 40);
     nextButton.setBounds(440, y, 80, 40);*/
 
-    volumeSlider.setBounds(10, 100, getWidth()/2 - 20, 30);
+
+	volumeLabel.setBounds(1, 120, 56, 30);
+
+    volumeSlider.setBounds(60, 120, getWidth()/2 - 20, 30);
 }
 
 void PlayerGUI::buttonClicked(juce::Button* button)
@@ -98,6 +110,7 @@ void PlayerGUI::buttonClicked(juce::Button* button)
         {
             playeraudio.lastGain = playeraudio.transportSource.getGain();
             playeraudio.transportSource.setGain(0.0f);
+            volumeSlider.setValue(0.0);//
             muteButton.setButtonText("Unmute");
             muteButton.setColour(juce::TextButton::buttonColourId, juce::Colours::red);
         }
@@ -105,14 +118,23 @@ void PlayerGUI::buttonClicked(juce::Button* button)
         {
             playeraudio.transportSource.setGain(playeraudio.lastGain);
             muteButton.setButtonText("Mute");
+            volumeSlider.setValue(playeraudio.lastGain);
             muteButton.setColour(juce::TextButton::buttonColourId, getLookAndFeel().findColour(juce::TextButton::buttonColourId));
         }
     }
 
     if (button == &pauseButton) 
     {
-        if (playeraudio.isPaused) playeraudio.transportSource.start();
-        else playeraudio.transportSource.stop();
+        if (playeraudio.isPaused)
+        {
+            playeraudio.transportSource.start();
+            pauseButton.setButtonText("Pause");
+        }
+        else
+        {
+            playeraudio.transportSource.stop();
+            pauseButton.setButtonText("Resume");
+        }
 
         playeraudio.isPaused = !playeraudio.isPaused;
     }
