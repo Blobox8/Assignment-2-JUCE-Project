@@ -30,6 +30,10 @@ private:
 
 	// loop button
 	juce::TextButton loopButton{ "loop" };
+	juce::TextButton muteButton{ "mute" };
+	bool isMuted = false;
+	float lastGain = 0.5f;
+
 
 	juce::Slider volumeSlider;
 
