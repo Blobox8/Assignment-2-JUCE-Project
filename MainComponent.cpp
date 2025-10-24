@@ -1,42 +1,68 @@
-#include "MainComponent.h"
 #include "PlayerAudio.h"
-#include "PlayerGUI.h"
 
-
-MainComponent::MainComponent()
-{   
-    addAndMakeVisible(player1);
-    setSize(500, 250);
-    setAudioChannels(0, 2);
+// constructor
+PlayerAudio::PlayerAudio() {
+    formatManager.registerBasicFormats();
 }
 
-MainComponent::~MainComponent()
+// destructor
+PlayerAudio::~PlayerAudio() {
+    transportSource.setSource(nullptr);
+}
+
+void PlayerAudio::prepareToPlay(int samplesPerBlockExpected, double sampleRate)
 {
-    shutdownAudio();
+    transportSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
 }
 
-
-void MainComponent::prepareToPlay(int samplesPerBlockExpected, double sampleRate)
+void PlayerAudio::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
 {
-    player1.prepareToPlay(samplesPerBlockExpected, sampleRate);
+    transportSource.getNextAudioBlock(bufferToFill);
 }
 
-void MainComponent::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
+void PlayerAudio::releaseResources()
 {
-    player1.getNextAudioBlock(bufferToFill);
+    transportSource.releaseResources();
 }
 
-void MainComponent::releaseResources()
+void PlayerAudio::toggleLoop(std::unique_ptr<juce::AudioFormatReaderSource> &readersource) {
+    readersource->setLooping(isLoop);
+}
+void PlayerAudio::gotostart()
 {
-    player1.releaseResources();
+	transportSource.setPosition(0.0);
 }
 
-void MainComponent::resized() {
-    player1.setBounds(10, 10, getWidth() - 20, getHeight()-20);
+void PlayerAudio::gotoend()
+{
+	double length = transportSource.getLengthInSeconds();
+
+	if (length > 0.0)
+		transportSource.setPosition(length);
 }
 
+bool PlayerAudio::loadFile(const juce::File& file) {
+    if (file.existsAsFile())
+    {
+        if (auto* reader = formatManager.createReaderFor(file))
+        {
+            // 🔑 Disconnect old source first
+            transportSource.stop();
+            transportSource.setSource(nullptr);
+            readerSource.reset();
 
+            // Create new reader source
+            readerSource = std::make_unique<juce::AudioFormatReaderSource>(reader, true);
+            
+            // Attach safely
+            transportSource.setSource(readerSource.get(),
+                0,
+                nullptr,
+                reader->sampleRate);
+            transportSource.start();
 
-
-
-
+            return true;
+        }
+    }
+    return false;
+}
