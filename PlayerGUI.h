@@ -38,6 +38,9 @@ private:
 	// pause/end buttons
 	juce::TextButton pauseButton{ "pause" };
 	juce::TextButton toEndButton{ "to end" };
+	//
+	juce::TextButton gotoendButton{ "gotoend" };
+	juce::TextButton gotostartButton{ "gotostart" };
 
 	juce::Label volumeLabel;
 	juce::Slider volumeSlider;
