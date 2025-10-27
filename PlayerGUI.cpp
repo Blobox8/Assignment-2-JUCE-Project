@@ -4,6 +4,9 @@
 
 PlayerGUI::PlayerGUI() {
 
+    // add timer
+    startTimer(1); // the timer 
+
     // Add buttons
     for (auto* btn : { &loadButton, &restartButton , &stopButton, &loopButton ,&muteButton, &pauseButton , &gotoendButton , &gotostartButton })
     {
@@ -26,6 +29,8 @@ PlayerGUI::PlayerGUI() {
     volumeSlider.addListener(this);
     addAndMakeVisible(volumeSlider);
 
+    
+
 	
 
     // Initialize variables for loopButton
@@ -37,6 +42,9 @@ PlayerGUI::PlayerGUI() {
 
     // initialize variables for pauseButton
     playeraudio.isPaused = false;
+
+    // initialize variables for posSlider
+    isMoved = false;
 }
 
 PlayerGUI::~PlayerGUI() {}
@@ -67,6 +75,8 @@ void PlayerGUI::resized()
 	volumeLabel.setBounds(1, 120, 56, 30);
 
     volumeSlider.setBounds(60, 120, getWidth()/2 - 50, 30);
+
+    posSlider.setBounds(60, 150, getWidth() / 2 - 5, 20);
 }
 
 void PlayerGUI::buttonClicked(juce::Button* button)
@@ -88,6 +98,21 @@ void PlayerGUI::buttonClicked(juce::Button* button)
             {
                 auto file = fc.getResult();
                 playeraudio.loadFile(file);
+
+                // add position slider when file is loaded
+                posSlider.setRange(0, playeraudio.transportSource.getLengthInSeconds(), 0.01);
+                posSlider.setValue(0);
+                posSlider.addListener(this);
+                addAndMakeVisible(posSlider);
+
+                // check if posSlider is being moved
+                posSlider.onDragStart = [this]() {
+                    isMoved = true;
+                    };
+                posSlider.onDragEnd = [this]() {
+                    isMoved = false;
+                    };
+
             });
     }
 
@@ -159,6 +184,9 @@ void PlayerGUI::sliderValueChanged(juce::Slider* slider)
 {
     if (slider == &volumeSlider)
         playeraudio.transportSource.setGain((float)slider->getValue());
+
+    if (isMoved && slider == &posSlider) // check if the slider is being moved by the user
+        playeraudio.transportSource.setPosition(posSlider.getValue());
 }
 
 
@@ -167,7 +195,7 @@ void PlayerGUI::prepareToPlay(int samplesPerBlockExpected, double sampleRate)
     playeraudio.prepareToPlay(samplesPerBlockExpected, sampleRate);
 }
 
-void PlayerGUI::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill) 
+void PlayerGUI::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
 {
     playeraudio.getNextAudioBlock(bufferToFill);
 }
@@ -177,3 +205,10 @@ void PlayerGUI::releaseResources()
     playeraudio.releaseResources();
 }
 
+void PlayerGUI::timerCallback() 
+{   
+    if (playeraudio.transportSource.isPlaying()) {
+        // update posSlider value
+        posSlider.setValue(playeraudio.transportSource.getCurrentPosition());
+    }
+}

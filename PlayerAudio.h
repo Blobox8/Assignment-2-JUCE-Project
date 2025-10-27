@@ -31,6 +31,8 @@ public:
     bool isMuted;
     float lastGain;
     bool isPaused;
+
+
     
 
     juce::AudioFormatManager formatManager;

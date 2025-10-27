@@ -5,7 +5,8 @@
 
 class PlayerGUI : public juce::Component, 
 	public juce::Button::Listener, 
-	public juce::Slider::Listener 
+	public juce::Slider::Listener,
+	public juce::Timer
 {
 public:
 	PlayerGUI();
@@ -14,6 +15,9 @@ public:
 	void prepareToPlay(int samplesPerBlockExpected, double sampleRate);
 	void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill);
 	void releaseResources();
+
+	// timer
+	void timerCallback() override;
 
 	// gui
 	void paint(juce::Graphics& g) override;
@@ -38,14 +42,20 @@ private:
 	// pause/end buttons
 	juce::TextButton pauseButton{ "pause" };
 	juce::TextButton toEndButton{ "to end" };
-	//
+
+ 
 	juce::TextButton gotoendButton{ "gotoend" };
 	juce::TextButton gotostartButton{ "gotostart" };
 
 	juce::Label volumeLabel;
 	juce::Slider volumeSlider;
 
+	juce::Slider posSlider;
+
 	std::unique_ptr<juce::FileChooser> fileChooser;
+
+	// variable for posSlider
+	bool isMoved;
 
 	// Event
 	void buttonClicked(juce::Button* button) override;
