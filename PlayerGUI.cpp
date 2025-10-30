@@ -13,10 +13,18 @@ PlayerGUI::PlayerGUI() {
         btn->addListener(this);
         addAndMakeVisible(btn);
     }
+    
 
 	muteButton.setButtonText("Mute");
 
-    //volume label
+    // Segment button
+    segmentButton.addListener(this);
+    segmentButton.setClickingTogglesState(false);
+    segmentButton.setColour(juce::ToggleButton::textColourId, juce::Colours::dimgrey);
+    addAndMakeVisible(segmentButton);
+
+
+    // Volume label
 	volumeLabel.setText("Volume", juce::dontSendNotification);
 	volumeLabel.setColour(juce::Label::textColourId, juce::Colours::whitesmoke);
 	addAndMakeVisible(volumeLabel);
@@ -29,9 +37,6 @@ PlayerGUI::PlayerGUI() {
     volumeSlider.addListener(this);
     addAndMakeVisible(volumeSlider);
 
-    
-
-	
 
     // Initialize variables for loopButton
     playeraudio.isLoop = false;
@@ -45,6 +50,11 @@ PlayerGUI::PlayerGUI() {
 
     // initialize variables for posSlider
     isMoved = false;
+
+    // initialize variables for segmentButton
+
+
+   
 }
 
 PlayerGUI::~PlayerGUI() {}
@@ -58,6 +68,7 @@ void PlayerGUI::resized()
 {
     int y = 20;
 
+    // Buttons
     loadButton.setBounds(20, y, 100, 40);
     restartButton.setBounds(140, y, 80, 40);
     stopButton.setBounds(240, y, 80, 40);
@@ -67,16 +78,16 @@ void PlayerGUI::resized()
 	gotoendButton.setBounds(140, y, 80, 40);
 	gotostartButton.setBounds(240, y, 80, 40);
 	muteButton.setBounds(340,y, 80, 40);
+    segmentButton.setBounds(60, 170, 80, 40);
+    
 
-    /*prevButton.setBounds(340, y, 80, 40);
-    nextButton.setBounds(440, y, 80, 40);*/
-
-
+    // Sliders
 	volumeLabel.setBounds(1, 120, 56, 30);
-
     volumeSlider.setBounds(60, 120, getWidth()/2 - 50, 30);
-
     posSlider.setBounds(60, 150, getWidth() / 2 - 5, 20);
+    segA.setBounds(160, 170, 80, 40);
+    segB.setBounds(260, 170, 80, 40);
+
 }
 
 void PlayerGUI::buttonClicked(juce::Button* button)
@@ -113,6 +124,19 @@ void PlayerGUI::buttonClicked(juce::Button* button)
                     isMoved = false;
                     };
 
+                // change segmet button state
+                segmentButton.setClickingTogglesState(true);
+                segmentButton.setColour(juce::ToggleButton::textColourId, juce::Colours::white);
+
+
+                // add segment sliders
+                segA.setRange(0, playeraudio.transportSource.getLengthInSeconds(), 0.01);
+                segB.setRange(0, playeraudio.transportSource.getLengthInSeconds(), 0.01);
+                segA.setValue(0);
+                segB.setValue(0);
+                addAndMakeVisible(segA);
+                addAndMakeVisible(segB);
+
             });
     }
 
@@ -132,6 +156,7 @@ void PlayerGUI::buttonClicked(juce::Button* button)
         playeraudio.isLoop = !(playeraudio.isLoop);
         playeraudio.toggleLoop(playeraudio.readerSource);
     }
+
     
     if (button == &muteButton)
     {
@@ -210,5 +235,16 @@ void PlayerGUI::timerCallback()
     if (playeraudio.transportSource.isPlaying()) {
         // update posSlider value
         posSlider.setValue(playeraudio.transportSource.getCurrentPosition());
+    }
+
+    // segment loop
+    if (playeraudio.isLoop && segmentButton.getToggleState())
+    {
+        double currentPosition = playeraudio.transportSource.getCurrentPosition();
+        double posA = segA.getValue();
+        double posB = segB.getValue();
+
+        if (currentPosition > posB || currentPosition < posA)
+            playeraudio.transportSource.setPosition(posA);
     }
 }

@@ -43,18 +43,21 @@ private:
 	juce::TextButton pauseButton{ "pause" };
 	juce::TextButton toEndButton{ "to end" };
 
+	// segment loop toggle button
+	juce::ToggleButton segmentButton{ "segment loop" };
+
  
 	juce::TextButton gotoendButton{ "gotoend" };
 	juce::TextButton gotostartButton{ "gotostart" };
 
 	juce::Label volumeLabel;
 	juce::Slider volumeSlider;
-
 	juce::Slider posSlider;
+	juce::Slider segA, segB;
 
 	std::unique_ptr<juce::FileChooser> fileChooser;
 
-	// variable for posSlider
+
 	bool isMoved;
 
 	// Event
