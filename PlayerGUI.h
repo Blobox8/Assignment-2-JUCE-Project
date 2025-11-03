@@ -2,6 +2,10 @@
 #include <JuceHeader.h>
 #include "PlayerAudio.h"
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> d7e4cfe81c88bc1af3c7d0569311734ca54c1946
 class PlayerGUI : public juce::Component,
 	public juce::Button::Listener,
 	public juce::Slider::Listener,
@@ -12,6 +16,9 @@ public:
 	PlayerGUI();
 	~PlayerGUI();
 
+	static int numOfPlayers;
+	PlayerGUI* player2;
+
 	void prepareToPlay(int samplesPerBlockExpected, double sampleRate);
 	void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill);
 	void releaseResources();
@@ -20,6 +27,17 @@ public:
 	void paint(juce::Graphics& g) override;
 	void resized() override;
 
+<<<<<<< HEAD
+	// speed
+	void updateSpeed();
+
+	// mixer 
+	void addMixerInputSource(PlayerGUI& source1, PlayerGUI& source2);
+	void mixerGetNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill);
+	void mixerPrepareToPlay(int samplesPerBlockExpected, double sampleRate);
+
+=======
+>>>>>>> d7e4cfe81c88bc1af3c7d0569311734ca54c1946
 	// Timer callback for updating progress
 	void timerCallback() override;
 
@@ -33,6 +51,9 @@ private:
 
 	// loop button
 	juce::TextButton loopButton{ "loop" };
+
+	// segment loop button
+	juce::ToggleButton segmentButton{ "segment" };
 
 	// mute button
 	juce::TextButton muteButton{ "mute" };
@@ -50,9 +71,26 @@ private:
 	juce::Slider speedSlider;
 	juce::Label speedLabel;
 
+<<<<<<< HEAD
+	// add new track button
+	juce::TextButton newTrackButton{ "Add new track" };
+
+	// Segment (start point, end point) label
+	juce::Label startLabel;
+	juce::Label endLabel;
+
 	// Progress slider - ADD THIS
 	juce::Slider progressSlider;
 	juce::Label progressLabel;
+
+	// Segment sliders
+	juce::Slider pointA;
+	juce::Slider pointB;
+=======
+	// Progress slider - ADD THIS
+	juce::Slider progressSlider;
+	juce::Label progressLabel;
+>>>>>>> d7e4cfe81c88bc1af3c7d0569311734ca54c1946
 
 	std::unique_ptr<juce::FileChooser> fileChooser;
 

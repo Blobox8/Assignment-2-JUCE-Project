@@ -19,6 +19,15 @@ public:
 	void gotostart();
 	void gotoend();
     void Speed(float speed);
+<<<<<<< HEAD
+
+    // mixer
+    void addMixerInputSource(juce::ResamplingAudioSource& source1, juce::ResamplingAudioSource& source2);
+    void mixerGetNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill);
+    void mixerPrepareToPlay(int samplesPerBlockExpected, double sampleRate);
+
+=======
+>>>>>>> d7e4cfe81c88bc1af3c7d0569311734ca54c1946
     /*void play();
     void stop();
     void setGain(float gain);
@@ -36,12 +45,14 @@ public:
     bool isMuted;
     float lastGain;
     bool isPaused;
+    bool isSegmentLoop;
 
 	
 
     juce::AudioFormatManager formatManager;
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
     juce::AudioTransportSource transportSource;
+    juce::MixerAudioSource mixer; // used to play two tracks 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PlayerAudio);
 };

@@ -12,6 +12,7 @@ public:
     {
         // Create and show the main window
         mainWindow = std::make_unique<MainWindow>(getApplicationName());
+
     }
 
     void shutdown() override
@@ -31,7 +32,11 @@ private:
         {
             setUsingNativeTitleBar(true);
             setContentOwned(new MainComponent(), true); // MainComponent = our UI + logic
+<<<<<<< HEAD
+            centreWithSize(600, 380);
+=======
             centreWithSize(500, 300);
+>>>>>>> d7e4cfe81c88bc1af3c7d0569311734ca54c1946
             setVisible(true);
         }
 
@@ -42,6 +47,7 @@ private:
     };
 
     std::unique_ptr<MainWindow> mainWindow;
+
 };
 
 // This macro starts the app

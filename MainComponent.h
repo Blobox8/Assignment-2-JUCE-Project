@@ -17,6 +17,7 @@ public:
     void resized() override;
     
 private:
-    PlayerGUI player1;
+    juce::MixerAudioSource mixer;
+    PlayerGUI player1, player2;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
 };

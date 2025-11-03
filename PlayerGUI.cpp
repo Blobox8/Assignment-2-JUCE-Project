@@ -1,6 +1,19 @@
 #include "PlayerGUI.h"
 #include "PlayerAudio.h"
 
+<<<<<<< HEAD
+int PlayerGUI::numOfPlayers = 1;
+
+PlayerGUI::PlayerGUI() {
+
+
+	// Add buttons
+	for (auto* btn : { &loadButton, &restartButton , &stopButton, &loopButton ,&muteButton, 
+		&pauseButton , &gotoendButton , &gotostartButton})
+	{
+		btn->addListener(this);
+		addAndMakeVisible(btn);
+=======
 PlayerGUI::PlayerGUI() {
 	// Add buttons
 	for (auto* btn : { &loadButton, &restartButton , &stopButton, &loopButton ,&muteButton, &pauseButton , &gotoendButton , &gotostartButton })
@@ -8,11 +21,25 @@ PlayerGUI::PlayerGUI() {
 		btn->addListener(this);
 		addAndMakeVisible(btn);
 		
+>>>>>>> d7e4cfe81c88bc1af3c7d0569311734ca54c1946
 	}
 
-	muteButton.setButtonText("Mute");
+	// add segmentButton individually because it has a differnet type (ToggleButton)
+	segmentButton.addListener(this);
+	addAndMakeVisible(segmentButton);
 
+<<<<<<< HEAD
+	// add newTrackButton if there is only one player
+	if (numOfPlayers == 1)
+	{
+		newTrackButton.addListener(this);
+		addAndMakeVisible(newTrackButton);
+	}
+	
+	// Volume label
+=======
 	//volume label
+>>>>>>> d7e4cfe81c88bc1af3c7d0569311734ca54c1946
 	volumeLabel.setText("Volume", juce::dontSendNotification);
 	volumeLabel.setColour(juce::Label::textColourId, juce::Colours::whitesmoke);
 	addAndMakeVisible(volumeLabel);
@@ -25,13 +52,56 @@ PlayerGUI::PlayerGUI() {
 	volumeSlider.addListener(this);
 	addAndMakeVisible(volumeSlider);
 
+<<<<<<< HEAD
+	// Speed slider
+=======
 	//speed slider
+>>>>>>> d7e4cfe81c88bc1af3c7d0569311734ca54c1946
 	speedSlider.setRange(0.5, 2.0, 0.1);
 	speedSlider.setValue(1.0);
 	speedSlider.setSliderStyle(juce::Slider::SliderStyle::LinearBar);
 	speedSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
 	speedSlider.addListener(this);
 	addAndMakeVisible(speedSlider);
+<<<<<<< HEAD
+
+	// Speed label
+	speedLabel.setText("Speed", juce::dontSendNotification);
+	addAndMakeVisible(speedLabel);
+
+	// Progress slider
+	progressSlider.setRange(0.0, 1.0, 0.01);
+	progressSlider.setValue(0.0);
+	progressSlider.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
+	progressSlider.setTextBoxStyle(juce::Slider::TextBoxLeft, true, 60,30);
+	progressSlider.addListener(this);
+	addAndMakeVisible(progressSlider);
+
+	//Progress label
+	progressLabel.setText("Progress", juce::dontSendNotification);
+	progressLabel.setColour(juce::Label::textColourId, juce::Colours::whitesmoke);
+	addAndMakeVisible(progressLabel);
+
+	// Segment sliders
+	pointA.setRange(0.00, 1.00, 0.01);
+	pointB.setRange(0.00, 1.00, 0.01);
+	addAndMakeVisible(pointA);
+	addAndMakeVisible(pointB);
+
+	// Segment label
+	startLabel.setText("Start", juce::dontSendNotification);
+	endLabel.setText("End", juce::dontSendNotification);
+	addAndMakeVisible(startLabel);
+	addAndMakeVisible(endLabel);
+
+	
+	playeraudio.isLoop = false;
+	playeraudio.isMuted = false;
+	playeraudio.lastGain = 0.5f;
+	playeraudio.isPaused = false;
+	playeraudio.isSegmentLoop = false;
+
+=======
 	//speed label
 	speedLabel.setText("Speed", juce::dontSendNotification);
 	addAndMakeVisible(speedLabel);
@@ -54,6 +124,7 @@ PlayerGUI::PlayerGUI() {
 	playeraudio.lastGain = 0.5f;
 	playeraudio.isPaused = false;
 
+>>>>>>> d7e4cfe81c88bc1af3c7d0569311734ca54c1946
 	startTimer(33); // update every 30ms
 	setWantsKeyboardFocus(true);
 }
@@ -64,7 +135,18 @@ PlayerGUI::~PlayerGUI() {
 
 void PlayerGUI::timerCallback()
 {
+<<<<<<< HEAD
+	// if newTackButton was pressed, make this component visible
+	if (numOfPlayers == 2) 
+	{
+		removeChildComponent(&newTrackButton);
+		(this)->setVisible(true);
+	}
+		
+
+=======
 	
+>>>>>>> d7e4cfe81c88bc1af3c7d0569311734ca54c1946
 	if (playeraudio.transportSource.getLengthInSeconds() > 0.0)
 	{
 		double currentPos = playeraudio.transportSource.getCurrentPosition();
@@ -81,6 +163,20 @@ void PlayerGUI::timerCallback()
 	{
 		progressSlider.setValue(0.0, juce::dontSendNotification);//if no sound set value to zero
 	}
+<<<<<<< HEAD
+
+	if (playeraudio.isSegmentLoop && playeraudio.isLoop)
+	{
+		double currentPos = playeraudio.transportSource.getCurrentPosition();
+		double totalLength = playeraudio.transportSource.getLengthInSeconds();
+		double startPos = pointA.getValue()*totalLength;
+		double endPos = pointB.getValue()*totalLength;
+
+		if (currentPos > endPos || currentPos < startPos)
+			playeraudio.transportSource.setPosition(startPos);
+	}
+=======
+>>>>>>> d7e4cfe81c88bc1af3c7d0569311734ca54c1946
 }
 
 void PlayerGUI::paint(juce::Graphics& g)
@@ -96,6 +192,11 @@ void PlayerGUI::resized()
 	restartButton.setBounds(140, y, 80, 40);
 	stopButton.setBounds(240, y, 80, 40);
 	loopButton.setBounds(340, y, 80, 40);
+<<<<<<< HEAD
+	segmentButton.setBounds(440, y, 80, 40);
+
+=======
+>>>>>>> d7e4cfe81c88bc1af3c7d0569311734ca54c1946
 
 	y = 70;
 	pauseButton.setBounds(20, y, 100, 40);
@@ -103,8 +204,14 @@ void PlayerGUI::resized()
 	gotostartButton.setBounds(240, y, 80, 40);
 	muteButton.setBounds(340, y, 80, 40);
 
+<<<<<<< HEAD
+
 	int sliderwidth = 160;
 
+=======
+	int sliderwidth = 160;
+
+>>>>>>> d7e4cfe81c88bc1af3c7d0569311734ca54c1946
 	// Volume controls
 	volumeLabel.setBounds(10, 120, 50, 25);
 	volumeSlider.setBounds(65, 120, sliderwidth, 25);
@@ -116,6 +223,17 @@ void PlayerGUI::resized()
 	// Progress slider
 	progressLabel.setBounds(10, 250, 60, 25);
 	progressSlider.setBounds(75, 250, getWidth() - 90, 25);
+<<<<<<< HEAD
+
+	// Segment controls
+	pointA.setBounds(20, 150, 100, 25);
+	pointB.setBounds(20, 170, 100, 25);
+	startLabel.setBounds(120, 150, 100, 25);
+	endLabel.setBounds(120, 170, 100, 25);
+
+	newTrackButton.setBounds(20, 300, 100, 40);
+=======
+>>>>>>> d7e4cfe81c88bc1af3c7d0569311734ca54c1946
 }
 bool PlayerGUI::keyPressed(const juce::KeyPress& key)
 {
@@ -247,6 +365,20 @@ void PlayerGUI::buttonClicked(juce::Button* button)
 		}
 	}
 
+<<<<<<< HEAD
+	if (button == &segmentButton)
+	{	
+		// segment loop implementation is in PlayerGUI::timerCallback()
+		if (segmentButton.getToggleState())
+		{
+			playeraudio.isSegmentLoop = true;
+		}
+		else
+		{
+			playeraudio.isSegmentLoop = false;
+		}
+	}
+
 	if (button == &muteButton)
 	{
 		playeraudio.isMuted = !playeraudio.isMuted;
@@ -283,6 +415,44 @@ void PlayerGUI::buttonClicked(juce::Button* button)
 		playeraudio.isPaused = !playeraudio.isPaused;
 	}
 
+=======
+	if (button == &muteButton)
+	{
+		playeraudio.isMuted = !playeraudio.isMuted;
+		if (playeraudio.isMuted)
+		{
+			playeraudio.lastGain = playeraudio.transportSource.getGain();
+			playeraudio.transportSource.setGain(0.0f);
+			volumeSlider.setValue(0.0);
+			muteButton.setButtonText("Unmute");
+			muteButton.setColour(juce::TextButton::buttonColourId, juce::Colours::red);
+		}
+		else
+		{
+			playeraudio.transportSource.setGain(playeraudio.lastGain);
+			muteButton.setButtonText("Mute");
+			volumeSlider.setValue(playeraudio.lastGain);
+			muteButton.setColour(juce::TextButton::buttonColourId, getLookAndFeel().findColour(juce::TextButton::buttonColourId));
+		}
+	}
+
+	if (button == &pauseButton)
+	{
+		if (playeraudio.isPaused)
+		{
+			playeraudio.transportSource.start();
+			pauseButton.setButtonText("Pause");
+		}
+		else
+		{
+			playeraudio.transportSource.stop();
+			pauseButton.setButtonText("Resume");
+		}
+
+		playeraudio.isPaused = !playeraudio.isPaused;
+	}
+
+>>>>>>> d7e4cfe81c88bc1af3c7d0569311734ca54c1946
 	if (button == &gotostartButton)
 	{
 		playeraudio.gotostart();
@@ -294,6 +464,17 @@ void PlayerGUI::buttonClicked(juce::Button* button)
 		playeraudio.gotoend();
 		progressSlider.setValue(1.0);
 	}
+<<<<<<< HEAD
+
+	if (button == &newTrackButton)
+	{
+		auto* window = findParentComponentOfClass<juce::DocumentWindow>();
+		window->setSize(600, 600);
+		removeChildComponent(&newTrackButton); // remove the button after being used
+		numOfPlayers++;
+	}
+=======
+>>>>>>> d7e4cfe81c88bc1af3c7d0569311734ca54c1946
 }
 
 void PlayerGUI::sliderValueChanged(juce::Slider* slider)
@@ -311,6 +492,26 @@ void PlayerGUI::sliderValueChanged(juce::Slider* slider)
 		double newPosition = progressSlider.getValue() * playeraudio.transportSource.getLengthInSeconds();//get persentage * total seconds
 		playeraudio.transportSource.setPosition(newPosition);
 	}
+<<<<<<< HEAD
+}
+
+
+// Mixer
+void PlayerGUI::addMixerInputSource(PlayerGUI& source1, PlayerGUI& source2)
+{
+	playeraudio.addMixerInputSource(source1.playeraudio.resamplingSource, source2.playeraudio.resamplingSource);
+}
+
+void PlayerGUI::mixerGetNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
+{
+	playeraudio.mixerGetNextAudioBlock(bufferToFill);
+}
+
+void PlayerGUI::mixerPrepareToPlay(int samplesPerBlockExpected, double sampleRate)
+{
+	playeraudio.mixerPrepareToPlay(samplesPerBlockExpected, sampleRate);
+=======
+>>>>>>> d7e4cfe81c88bc1af3c7d0569311734ca54c1946
 }
 
 void PlayerGUI::prepareToPlay(int samplesPerBlockExpected, double sampleRate)

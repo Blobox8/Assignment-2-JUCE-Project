@@ -49,6 +49,22 @@ void PlayerAudio::gotoend()
 		transportSource.setPosition(length);
 }
 
+void PlayerAudio::addMixerInputSource(juce::ResamplingAudioSource& source1, juce::ResamplingAudioSource& source2)
+{
+    mixer.addInputSource(&source1, false);
+    mixer.addInputSource(&source2, false);
+}
+
+void PlayerAudio::mixerGetNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
+{
+    mixer.getNextAudioBlock(bufferToFill);
+}
+
+void PlayerAudio::mixerPrepareToPlay(int samplesPerBlockExpected, double sampleRate)
+{
+    mixer.prepareToPlay(samplesPerBlockExpected, sampleRate);
+}
+
 bool PlayerAudio::loadFile(const juce::File& file) {
     if (file.existsAsFile())
     {
@@ -69,8 +85,11 @@ bool PlayerAudio::loadFile(const juce::File& file) {
                 reader->sampleRate);
             transportSource.start();
 			
+<<<<<<< HEAD
+=======
 
 
+>>>>>>> d7e4cfe81c88bc1af3c7d0569311734ca54c1946
             return true;
         }
     }
