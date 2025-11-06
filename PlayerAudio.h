@@ -13,10 +13,18 @@ public:
     void prepareToPlay(int samplesPerBlockExpected, double sampleRate);
     void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill);
     void releaseResources();
- 
-    bool loadFile(const juce::File& file);
 
-	void gotostart();
+    // mo تغيير: دالة لتحميل عدة ملفات
+    bool loadFiles(const juce::Array<juce::File>& files);
+    //mo دالة لتحميل ملف معين من القائمة
+    bool loadFile(int index);
+    //bool loadFile(const juce::File& file);
+   
+    // moدوال التحكم في القائمة
+    void playNext();
+    void playPrevious();
+	
+    void gotostart();
 	void gotoend();
     void Speed(float speed);
 <<<<<<< HEAD
@@ -37,7 +45,9 @@ public:
 
     // toggle sound file loop
     void toggleLoop(std::unique_ptr<juce::AudioFormatReaderSource> &readersource);
-    
+     // mo دالة جديدة للوصول إلى displayInfo
+    juce::String getDisplayInfo() const { return displayInfo; }
+
     juce::ResamplingAudioSource resamplingSource;
     double currentSampleRate;
 
@@ -53,6 +63,11 @@ public:
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
     juce::AudioTransportSource transportSource;
     juce::MixerAudioSource mixer; // used to play two tracks 
+      // mo قائمة الملفات ومؤشر الملف الحالي
+    juce::Array<juce::File> playlistFiles;
+    int currentFileIndex = -1; // -1 يعني لا يوجد ملف محمل حاليh
+    juce::String displayInfo;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PlayerAudio);
 };
+
