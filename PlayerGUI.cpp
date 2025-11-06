@@ -4,12 +4,19 @@
 <<<<<<< HEAD
 int PlayerGUI::numOfPlayers = 1;
 
-PlayerGUI::PlayerGUI() {
+PlayerGUI::PlayerGUI() :
+// mo 
+ playlistModel(playeraudio) 
+{
 
+// mo إعداد الـ ListBox
+playlistBox.setModel(&playlistModel);
+playlistBox.setColour(juce::ListBox::backgroundColourId, juce::Colours::grey);
+addAndMakeVisible(playlistBox);
 
 	// Add buttons
-	for (auto* btn : { &loadButton, &restartButton , &stopButton, &loopButton ,&muteButton, 
-		&pauseButton , &gotoendButton , &gotostartButton})
+	for (auto* btn : {  &loadMultiButton, &restartButton , &stopButton, &loopButton ,&muteButton, 
+		&pauseButton , &gotoendButton , &gotostartButton ,&nextButton ,&prevButton})
 	{
 		btn->addListener(this);
 		addAndMakeVisible(btn);
@@ -203,6 +210,11 @@ void PlayerGUI::resized()
 	gotoendButton.setBounds(140, y, 80, 40);
 	gotostartButton.setBounds(240, y, 80, 40);
 	muteButton.setBounds(340, y, 80, 40);
+    //mo تحديد موقع لافتة معلومات الملف ً
+   fileInfoLabel.setBounds(10, 160, getWidth() - 20, 30);
+   y = 120;
+   prevButton.setBounds(10, y, 80, 30);
+   nextButton.setBounds(90, y, 80, 30);
 
 <<<<<<< HEAD
 
@@ -316,9 +328,9 @@ void PlayerGUI::buttonClicked(juce::Button* button)
 {
 	if (button == &loadButton)
 	{
-		juce::FileChooser chooser("Select audio files...",
+		/*juce::FileChooser chooser("Select audio files...",
 			juce::File{},
-			"*.wav;*.mp3");
+			"*.wav;*.mp3");*/
 
 		fileChooser = std::make_unique<juce::FileChooser>(
 			"Select an audio file...",
@@ -329,15 +341,34 @@ void PlayerGUI::buttonClicked(juce::Button* button)
 			juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles,
 			[this](const juce::FileChooser& fc)
 			{
-				auto file = fc.getResult();
-				if (playeraudio.loadFile(file))
+				 auto files = fc.getResults(); // 🔄 نحصل على قائمة النتائج
+                 if (!files.isEmpty() && playeraudio.loadFiles(files))
 				{
+					//mo
+					    fileInfoLabel.setText(playeraudio.getDisplayInfo(), juce::dontSendNotification);
+                        playlistBox.updateContent(); // 🆕 تحديث عرض القائمة
+                        playlistBox.selectRow(playeraudio.getCurrentIndex(), true, true); // تحديد الملف الأول
+                 }
 					// Reset progress when new file is loaded
 					progressSlider.setValue(0.0);
 				}
 			});
 	}
+     // mo م زر التالي
+if (button == &nextButton)
+{
+    playeraudio.playNext();
+    fileInfoLabel.setText(playeraudio.getDisplayInfo(), juce::dontSendNotification);
+    playlistBox.selectRow(playeraudio.getCurrentIndex(), true, true);
+}
 
+// mo م زر السابق
+if (button == &prevButton)
+{
+    playeraudio.playPrevious();
+    fileInfoLabel.setText(playeraudio.getDisplayInfo(), juce::dontSendNotification);
+    playlistBox.selectRow(playeraudio.getCurrentIndex(), true, true);
+}
 	if (button == &restartButton)
 	{
 		playeraudio.transportSource.start();
@@ -528,3 +559,4 @@ void PlayerGUI::releaseResources()
 {
 	playeraudio.releaseResources();
 }
+
