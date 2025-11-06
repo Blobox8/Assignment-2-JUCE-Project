@@ -1,7 +1,6 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include <vector>
 #include "PlayerGUI.h"
 #include "PlayerAudio.h"
 
@@ -15,7 +14,7 @@ public:
     void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill) override;
     void releaseResources() override;
     void resized() override;
-    
+
 private:
     juce::MixerAudioSource mixer;
     PlayerGUI player1, player2;
