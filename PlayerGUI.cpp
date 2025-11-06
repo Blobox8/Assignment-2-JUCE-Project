@@ -198,7 +198,7 @@ void PlayerGUI::resized()
 {
 	int y = 20;
 
-	loadButton.setBounds(20, y, 100, 40);
+	 loadMultiButton.setBounds(20, y, 100, 40);
 	restartButton.setBounds(140, y, 80, 40);
 	stopButton.setBounds(240, y, 80, 40);
 	loopButton.setBounds(340, y, 80, 40);
@@ -329,14 +329,14 @@ bool PlayerGUI::keyPressed(const juce::KeyPress& key)
 }
 void PlayerGUI::buttonClicked(juce::Button* button)
 {
-	if (button == &loadButton)
+	if (button ==&loadMultiButton)
 	{
 		/*juce::FileChooser chooser("Select audio files...",
 			juce::File{},
 			"*.wav;*.mp3");*/
 
 		fileChooser = std::make_unique<juce::FileChooser>(
-			"Select an audio file...",
+			"Select an audio files...",
 			juce::File{},
 			"*.wav;*.mp3");
 
@@ -562,5 +562,6 @@ void PlayerGUI::releaseResources()
 {
 	playeraudio.releaseResources();
 }
+
 
 
