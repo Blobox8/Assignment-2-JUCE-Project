@@ -58,7 +58,10 @@ PlayerGUI::PlayerGUI() {
 	volumeSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
 	volumeSlider.addListener(this);
 	addAndMakeVisible(volumeSlider);
-
+    // mo إعداد لافتة معلومات الملف
+fileInfoLabel.setText("No file loaded", juce::dontSendNotification);
+fileInfoLabel.setColour(juce::Label::textColourId, juce::Colours::cyan); // لون مميز
+addAndMakeVisible(fileInfoLabel);
 <<<<<<< HEAD
 	// Speed slider
 =======
@@ -559,4 +562,5 @@ void PlayerGUI::releaseResources()
 {
 	playeraudio.releaseResources();
 }
+
 
