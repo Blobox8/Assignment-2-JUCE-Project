@@ -36,6 +36,6 @@ void MainComponent::releaseResources()
 
 void MainComponent::resized()
 {
-    player1.setBounds(10, 10, getWidth() - 20, getHeight() - 20);
-    player2.setBounds(10, 300, getWidth() - 20, getHeight() - 310);
+    player1.setBounds(10, 10, 480, getHeight() - 20);
+    player2.setBounds(510, 10, 480, getHeight() - 20);
 }

@@ -131,7 +131,7 @@ void PlayerGUI::resized()
     int availableHeight = getHeight();
     int availableWidth = getWidth();
 
-    // Calculate dynamic spacing based on available height
+    // Calculat spacing based on available height
     int buttonHeight = 40;
     int smallButtonHeight = 30;
     int labelHeight = 25;
@@ -139,14 +139,14 @@ void PlayerGUI::resized()
 
     int y = 10;
 
-    // First row of buttons - adjust spacing for two players
-    int buttonSpacing = (numOfPlayers == 2) ? 70 : 100; // Closer spacing for two players
+    // First row of buttons
+    int buttonSpacing = (numOfPlayers == 2) ? 70 : 100;
 
     loadMultiButton.setBounds(10, y, 90, buttonHeight);
     restartButton.setBounds(110, y, 70, buttonHeight);
     stopButton.setBounds(190, y, 70, buttonHeight);
     loopButton.setBounds(270, y, 70, buttonHeight);
-    segmentButton.setBounds(350, y, 70, buttonHeight);
+    
 
     y += buttonHeight + 10;
 
@@ -155,6 +155,7 @@ void PlayerGUI::resized()
     gotoendButton.setBounds(110, y, 70, buttonHeight);
     gotostartButton.setBounds(190, y, 70, buttonHeight);
     muteButton.setBounds(270, y, 70, buttonHeight);
+    segmentButton.setBounds(350, y, 70, buttonHeight);
 
     y += buttonHeight + 10;
 
@@ -169,7 +170,7 @@ void PlayerGUI::resized()
 
     y += labelHeight + 10;
 
-    // Segment controls - position them more compactly
+    // Segment controls
     startLabel.setBounds(10, y, 40, labelHeight);
     pointA.setBounds(55, y, 80, labelHeight);
     endLabel.setBounds(145, y, 40, labelHeight);
@@ -177,7 +178,7 @@ void PlayerGUI::resized()
 
     y += labelHeight + 15;
 
-    // Volume and speed controls - side by side but compact
+    // Volume and speed control
     int controlWidth = (availableWidth - 30) / 2;
 
     volumeLabel.setBounds(10, y, 50, labelHeight);
@@ -204,11 +205,11 @@ void PlayerGUI::resized()
 
     y += playlistHeight + 10;
 
-    // Progress slider at the bottom
+    // Progress slider
     progressLabel.setBounds(10, y, 60, labelHeight);
     progressSlider.setBounds(75, y, availableWidth - 90, sliderHeight);
 
-    // New track button only for first player, positioned appropriately
+    // New track button only for first player
     if (numOfPlayers == 1) {
         newTrackButton.setBounds(availableWidth - 120, 10, 110, 30);
     }
@@ -420,7 +421,7 @@ void PlayerGUI::buttonClicked(juce::Button* button)
     {
         auto* window = findParentComponentOfClass<juce::DocumentWindow>();
         if (window != nullptr) {
-            window->setSize(900, 700); // Wider window for two players
+            window->setSize(1000, 700);
         }
         removeChildComponent(&newTrackButton);
         numOfPlayers++;
