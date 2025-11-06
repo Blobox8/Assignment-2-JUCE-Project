@@ -48,7 +48,13 @@ void PlayerAudio::gotoend()
 	if (length > 0.0)
 		transportSource.setPosition(length);
 }
-
+// mo تنفيذ دالة للحصول على اسم الملف
+juce::String PlayerAudio::getFileName(int index) const
+{
+    if (index >= 0 && index < playlistFiles.size())
+        return playlistFiles[index].getFileNameWithoutExtension();
+    return {};
+}
 void PlayerAudio::addMixerInputSource(juce::ResamplingAudioSource& source1, juce::ResamplingAudioSource& source2)
 {
     mixer.addInputSource(&source1, false);
@@ -65,7 +71,13 @@ void PlayerAudio::mixerPrepareToPlay(int samplesPerBlockExpected, double sampleR
     mixer.prepareToPlay(samplesPerBlockExpected, sampleRate);
 }
 
-bool PlayerAudio::loadFile(const juce::File& file) {
+// mo تنفيذ دالة تحميل ملف معين من القائمة
+bool PlayerAudio::loadFile(int index) {
+    if (index < 0 || index >= playlistFiles.size())
+        return false;
+     const juce::File& file = playlistFiles[index];
+
+	
     if (file.existsAsFile())
     {
         if (auto* reader = formatManager.createReaderFor(file))
@@ -84,14 +96,63 @@ bool PlayerAudio::loadFile(const juce::File& file) {
                 nullptr,
                 reader->sampleRate);
             transportSource.start();
-			
+			// mo تحديث مؤشر الملف الحال
+			 currentFileIndex = index;
+			//mo منطق استخراج وعرض البيانات
+            juce::String title = reader->metadataValues["title"].isNotEmpty() ? reader->metadataValues["title"] : file.getFileName();
+            juce::String author = reader->metadataValues["artist"].isNotEmpty() ? reader->metadataValues["artist"] : "";
+            double duration = transportSource.getLengthInSeconds();
+            juce::String durationString = juce::String::formatted("%.2f s", duration);
+
+            displayInfo = title;
+            if (author.isNotEmpty())
+            {
+                displayInfo << " by " << author;
+            }
+            displayInfo << " (" << durationString << ")";
+
+            return true;
+        }
+    }
+    displayInfo = "Failed to load file.";
+    return false;
+}
 <<<<<<< HEAD
 =======
 
 
 >>>>>>> d7e4cfe81c88bc1af3c7d0569311734ca54c1946
-            return true;
+/*return true;
         }
     }
     return false;
+}*/
+//mo دالة تحميل الملفات المتعددة
+bool PlayerAudio::loadFiles(const juce::Array<juce::File>& files) {
+    if (files.isEmpty())
+        return false;
+
+    playlistFiles = files; // حفظ القائمة الجديدة
+    currentFileIndex = -1; // إعادة تعيين المؤشر
+    return loadFile(0); // تحميل الملف الأول مباشرة
 }
+
+
+// mo دالة التشغيل التالي
+void PlayerAudio::playNext() {
+    if (playlistFiles.size() > 1) {
+        int nextIndex = (currentFileIndex + 1) % playlistFiles.size(); // دوران (Loop)
+        loadFile(nextIndex);
+    }
+}
+
+// mo دالة التشغيل السابق
+void PlayerAudio::playPrevious() {
+    if (playlistFiles.size() > 1) {
+        int prevIndex = currentFileIndex - 1;
+        if (prevIndex < 0)
+            prevIndex = playlistFiles.size() - 1; // دوران (Loop)
+        loadFile(prevIndex);
+    }
+}
+
