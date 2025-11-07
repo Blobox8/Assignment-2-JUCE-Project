@@ -6,7 +6,6 @@ class PlaylistComponent : public juce::ListBoxModel
 {
 public:
     PlaylistComponent(PlayerAudio& pa) : playerAudio(pa) {}
-
     int getNumRows() override { return playerAudio.getPlaylistSize(); }
 
     void paintListBoxItem(int rowNumber, juce::Graphics& g,
