@@ -29,7 +29,7 @@ private:
         {
             setUsingNativeTitleBar(true);
             setContentOwned(new MainComponent(), true);
-            centreWithSize(500, 700); // Fixed: Larger window size
+            centreWithSize(500, 700);
             setVisible(true);
         }
 
