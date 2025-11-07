@@ -11,11 +11,35 @@ MainComponent::MainComponent()
 
     setSize(500, 250);
     setAudioChannels(0, 2);
+
+    
+    
+        backgroundImage = juce::Image(juce::Image::RGB, 1, 2, true);
+        juce::Graphics g(backgroundImage);
+        g.setGradientFill(juce::ColourGradient(
+            juce::Colours::darkblue, 0, 0,
+            juce::Colours::black, 0, 1, false));
+        g.fillAll();
+    
 }
 
 MainComponent::~MainComponent()
 {
     shutdownAudio();
+}
+
+
+void MainComponent::paint(juce::Graphics& g)
+{
+   
+    if (!backgroundImage.isNull())
+    {
+        g.drawImage(backgroundImage, getLocalBounds().toFloat());
+    }
+    else
+    {
+        g.fillAll(juce::Colours::darkgrey);
+    }
 }
 
 void MainComponent::prepareToPlay(int samplesPerBlockExpected, double sampleRate)
@@ -36,6 +60,8 @@ void MainComponent::releaseResources()
 
 void MainComponent::resized()
 {
-    player1.setBounds(10, 10, 480, getHeight() - 20);
-    player2.setBounds(510, 10, 480, getHeight() - 20);
+    
+    player1.setBounds(10, 10, 485, getHeight() - 20);
+    player2.setBounds(505, 10, 485, getHeight() - 20);
+ 
 }
