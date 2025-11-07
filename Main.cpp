@@ -1,3 +1,4 @@
+
 #include <JuceHeader.h>
 #include "MainComponent.h"
 
@@ -23,7 +24,7 @@ private:
     public:
         MainWindow(juce::String name)
             : DocumentWindow(name,
-                juce::Colours::lightgrey,
+                juce::Colours::lightyellow,
                 DocumentWindow::allButtons)
         {
             setUsingNativeTitleBar(true);
