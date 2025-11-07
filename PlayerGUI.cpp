@@ -112,12 +112,11 @@ void PlayerGUI::timerCallback()
     if (playeraudio.transportSource.getLengthInSeconds() > 0.0)
     {
         double currentPos = playeraudio.transportSource.getCurrentPosition();
-        double totalLength = playeraudio.transportSource.getLengthInSeconds();
-        double progress = currentPos / totalLength;
+
 
         if (!progressSlider.isMouseButtonDown())
         {
-            progressSlider.setValue(progress, juce::dontSendNotification);
+            progressSlider.setValue(currentPos, juce::dontSendNotification);
         }
     }
     else
@@ -128,9 +127,8 @@ void PlayerGUI::timerCallback()
     if (playeraudio.isSegmentLoop && playeraudio.isLoop)
     {
         double currentPos = playeraudio.transportSource.getCurrentPosition();
-        double totalLength = playeraudio.transportSource.getLengthInSeconds();
-        double startPos = pointA.getValue() * totalLength;
-        double endPos = pointB.getValue() * totalLength;
+        double startPos = pointA.getValue();
+        double endPos = pointB.getValue();
 
         if (currentPos > endPos || currentPos < startPos)
             playeraudio.transportSource.setPosition(startPos);
@@ -332,6 +330,12 @@ void PlayerGUI::buttonClicked(juce::Button* button)
                     fileInfoLabel.setText(playeraudio.getDisplayInfo(), juce::dontSendNotification);
                     playlistBox.updateContent();
                     playlistBox.selectRow(playeraudio.getCurrentIndex(), true, true);
+
+                    // Change progress slider and pointA and pointB range when a file is loaded
+                    progressSlider.setRange(0.0, playeraudio.transportSource.getLengthInSeconds(), 0.01);
+                    pointA.setRange(0.0, playeraudio.transportSource.getLengthInSeconds(), 0.01);
+                    pointB.setRange(0.0, playeraudio.transportSource.getLengthInSeconds(), 0.01);
+
                 }
                 progressSlider.setValue(0.0);
             });
@@ -463,7 +467,7 @@ void PlayerGUI::sliderValueChanged(juce::Slider* slider)
     }
     else if (slider == &progressSlider)
     {
-        double newPosition = progressSlider.getValue() * playeraudio.transportSource.getLengthInSeconds();
+        double newPosition = progressSlider.getValue();
         playeraudio.transportSource.setPosition(newPosition);
     }
 }
