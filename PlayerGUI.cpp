@@ -438,7 +438,7 @@ void PlayerGUI::buttonClicked(juce::Button* button)
     if (button == &gotoendButton)
     {
         playeraudio.gotoend();
-        progressSlider.setValue(1.0);
+        progressSlider.setValue(playeraudio.transportSource.getLengthInSeconds());
     }
 
     if (button == &newTrackButton)
