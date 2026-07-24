@@ -50,5 +50,4 @@ To compile and run this JUCE application locally, ensure you have:
 
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/your-username/JUCE-Audio-Player.git](https://github.com/your-username/JUCE-Audio-Player.git)
-   cd JUCE-Audio-Player
+   git clone https://github.com/Blobox8/Assignment-2-JUCE-Project.git
